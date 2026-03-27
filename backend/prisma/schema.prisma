@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -15,17 +15,19 @@ model User {
   role      Role     @default(BUYER)
   createdAt DateTime @default(now())
 
-  favourites Favourite[]
+  favourites    Favourite[]
+  refreshTokens RefreshToken[]
 }
 
 model Property {
-  id          String   @id @default(uuid()) @map("_id")
+  id          String      @id @default(uuid()) @map("_id")
   title       String
   description String
   price       Float
   location    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  favourites  Favourite[]
 }
 
 model Favourite {
@@ -34,9 +36,22 @@ model Favourite {
   userId     String
   createdAt  DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
   @@unique([userId, propertyId])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid()) @map("_id")
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
 }
 
 enum Role {

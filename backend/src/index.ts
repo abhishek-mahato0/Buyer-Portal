@@ -1,14 +1,17 @@
 // src/index.ts
-import express, { Request, Response } from "express";
+import express from "express";
 import dotenv from "dotenv";
+import authRoutes from "./modules/auth/auth.routes";
+import favouriteRoutes from "./modules/favourite/favourite.routes";
 
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello from TypeScript + Express!");
-});
+app.use(express.json());
+
+app.use("/api/auth", authRoutes);
+app.use("/api/favourite", favouriteRoutes);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
