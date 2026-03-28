@@ -6,6 +6,7 @@ import type { TProperty } from "../Dashboard/types";
 import { queryClient } from "../../api/queryClient";
 import { useState } from "react";
 import { Link } from "react-router";
+import { toast } from "react-toastify";
 
 const Favourites = () => {
   const [favourite, setFavourite] = useState([]);
@@ -22,6 +23,7 @@ const Favourites = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(JSON.stringify(["favourites"]));
       queryClient.invalidateQueries(JSON.stringify(["favourite-ids"]));
+      toast.success("Property removed from favourites");
     },
   });
 

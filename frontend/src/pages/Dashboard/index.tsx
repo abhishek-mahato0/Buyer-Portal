@@ -9,6 +9,7 @@ import { useMutation } from "../../hooks/useMutation";
 import { getAllProperties, getFavouriteIds, toggleFavourite } from "./api";
 import type { TProperty } from "./types";
 import { queryClient } from "../../api/queryClient";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const [filters, setFilters] = useState<FilterValues>({
@@ -65,10 +66,12 @@ const Dashboard = () => {
         setFavouriteIds((prev) => [...prev, propertyId]);
         const updatedIds = [...favouriteIds, propertyId];
         queryClient.setQueryData(JSON.stringify(["favourite-ids"]), updatedIds);
+        toast.success("Property added to favourites");
       } else {
         const updatedIds = favouriteIds.filter((id) => id !== propertyId);
         setFavouriteIds(updatedIds);
         queryClient.setQueryData(JSON.stringify(["favourite-ids"]), updatedIds);
+        toast.success("Property removed from favourites");
       }
       queryClient.invalidateQueries(JSON.stringify(["favourite"]));
     },
