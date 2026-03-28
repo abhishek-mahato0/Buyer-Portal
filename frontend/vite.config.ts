@@ -5,5 +5,11 @@ import flashCss from "flashcss-vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), flashCss(), babel({ presets: [reactCompilerPreset()] })],
+  plugins: [
+    react(),
+    flashCss({
+      preDefinedClasses: ["border-red"],
+    }),
+    babel({ presets: [reactCompilerPreset()] }),
+  ],
 });

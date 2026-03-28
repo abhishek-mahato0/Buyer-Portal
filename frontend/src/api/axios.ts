@@ -2,7 +2,7 @@ import axios from "axios";
 import { getItem, removeItem } from "../utils/localstorage";
 
 export const api = axios.create({
-  baseURL: "https://jsonplaceholder.typicode.com/",
+  baseURL: "http://localhost:3000/api/",
 });
 
 api.interceptors.request.use((config) => {
