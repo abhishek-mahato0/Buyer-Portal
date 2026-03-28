@@ -6,6 +6,7 @@ interface ButtonProps {
   className?: string;
   onClick?: () => void;
   loading?: boolean;
+  disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -14,11 +15,13 @@ const Button: React.FC<ButtonProps> = ({
   className,
   onClick,
   loading = false,
+  disabled = false,
 }) => {
   return (
     <button
       type={type}
       onClick={onClick}
+      disabled={disabled || loading}
       className={`w  -full bg-black size-[16px] md:size-[18px] text-white py-16 px-32 rounded-[20px] font-semibold hover:bg-gray-800 transition-all active:scale-[0.98] ${className}`}
     >
       {loading ? <div className="loader"></div> : text}

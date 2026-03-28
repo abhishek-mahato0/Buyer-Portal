@@ -11,9 +11,10 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const register = useMutation(registerApi, {
     onSuccess: (data: any) => {
-      setItem("token", data.token);
-      setItem("refreshToken", data.refreshToken);
-      setItem("user", JSON.stringify(data.user));
+      const { accessToken, refreshToken, user } = data.data;
+      setItem("token", accessToken);
+      setItem("refreshToken", refreshToken);
+      setItem("user", JSON.stringify(user));
       toast.success("Register successfully");
       navigate("/");
     },

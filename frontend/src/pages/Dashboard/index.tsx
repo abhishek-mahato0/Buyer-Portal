@@ -24,6 +24,7 @@ const Dashboard = () => {
   const [hasMore, setHasMore] = useState(true);
   const observerTarget = useRef(null);
   const [favouriteIds, setFavouriteIds] = useState<string[]>([]);
+  const [totalProperties, setTotalProperties] = useState(0);
 
   // Fetch only user favourite IDs for performance
   useQuery(["favourite-ids"], getFavouriteIds, {
@@ -48,6 +49,7 @@ const Dashboard = () => {
       onSuccess: (result) => {
         if (page === 1) {
           setProperties(result.properties);
+          setTotalProperties(result.meta.total);
         } else {
           setProperties((prev) => [...prev, ...result.properties]);
         }
@@ -61,10 +63,14 @@ const Dashboard = () => {
       const { propertyId, action } = data.data;
       if (action === "added") {
         setFavouriteIds((prev) => [...prev, propertyId]);
+        const updatedIds = [...favouriteIds, propertyId];
+        queryClient.setQueryData(JSON.stringify(["favourite-ids"]), updatedIds);
       } else {
-        setFavouriteIds((prev) => prev.filter((id) => id !== propertyId));
+        const updatedIds = favouriteIds.filter((id) => id !== propertyId);
+        setFavouriteIds(updatedIds);
+        queryClient.setQueryData(JSON.stringify(["favourite-ids"]), updatedIds);
       }
-      queryClient.invalidateQueries(JSON.stringify(["favourites"]));
+      queryClient.invalidateQueries(JSON.stringify(["favourite"]));
     },
   });
 
@@ -97,13 +103,16 @@ const Dashboard = () => {
       </div>
 
       <div className="w-full flex gap-16 items-center justify-center">
+        <div className="bg-green w-[90px] h-[90px] rounded-full flex items-center justify-center flex flex-col">
+          <span>Total</span>
+          <span>{totalProperties}</span>
+        </div>
         <PropertyFilter
           onFilterChange={(data) => {
             setFilters(data);
           }}
         />
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 px-10 lg:max-w-[81vw] md:max-w-[90vw]">
         {properties.map((property: TProperty) => (
           <PropertyCard
@@ -115,7 +124,9 @@ const Dashboard = () => {
         ))}
         {isLoading && (
           <div className="col-span-full flex justify-center py-4">
-            <p className="text-gray-500 animate-pulse">Loading properties...</p>
+            <div className="w-full flex justify-center py-10 mt-30">
+              <div className="loader-lg" />
+            </div>
           </div>
         )}
         {!isLoading && properties.length === 0 && (

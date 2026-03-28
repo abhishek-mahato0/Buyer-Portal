@@ -50,7 +50,9 @@ class QueryClient {
   subscribe(key: QueryKey, cb: () => void) {
     const state = this.getQuery(key);
     state.subscribers.add(cb);
-    return () => state.subscribers.delete(cb);
+    return () => {
+      state.subscribers.delete(cb);
+    };
   }
 
   invalidateQueries(key: QueryKey) {

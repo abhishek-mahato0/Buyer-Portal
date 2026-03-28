@@ -16,7 +16,6 @@ export const validate =
 
     if (!result.success) {
       const message = result.errors.map((e: any) => e.message).join(", ");
-      console.log(message, result.errors, "result");
       sendError(res, message, 400);
       return;
     }

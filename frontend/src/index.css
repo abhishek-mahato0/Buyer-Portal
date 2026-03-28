@@ -263,6 +263,10 @@ a {
   margin-bottom: 1rem;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -281,11 +285,39 @@ a {
   animation: rotation 1s linear infinite;
 }
 
+.loader-lg {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #121212;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+.logo-full {
+  display: inline;
+}
+
+.logo-short {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .logo-full {
+    display: none;
+  }
+  .logo-short {
+    display: inline;
   }
 }

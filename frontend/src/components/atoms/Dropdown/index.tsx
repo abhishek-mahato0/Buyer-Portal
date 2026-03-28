@@ -12,7 +12,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   ...props
 }) => {
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-4 w-full min-w-[150px] max-w-[290px]">
       {label && <label className="text-sm font-medium">{label}</label>}
 
       <select

@@ -1,17 +1,38 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyAccessToken } from "../utils/jwt";
 import { AppError } from "../utils/AppError";
+import { verifyAccessToken } from "../utils/jwt";
 
-export const authMiddleware = (req: any, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization?.split(" ")[1];
+interface AuthRequest extends Request {
+  user?: any;
+}
 
-  if (!token) throw new AppError("Unauthorized", 401);
-
+export const authMiddleware = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return next(new AppError("Unauthorized", 401, "UNAUTHORIZED"));
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    if (!token) {
+      return next(new AppError("Unauthorized", 401, "UNAUTHORIZED"));
+    }
+
     const decoded = verifyAccessToken(token);
     req.user = decoded;
+
     next();
-  } catch {
-    throw new AppError("Invalid token", 401);
+  } catch (error: any) {
+    if (error.name === "TokenExpiredError") {
+      return next(new AppError("Token expired", 401, "TOKEN_EXPIRED"));
+    }
+
+    return next(new AppError("Invalid token", 401, "INVALID_TOKEN"));
   }
 };

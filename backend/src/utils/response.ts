@@ -13,12 +13,14 @@ export const sendError = (
   res: Response,
   error: AppError | string,
   status = 400,
+  code = "",
 ) => {
   let message = "Error";
 
   if (error instanceof AppError) {
     message = error.message;
     status = error.statusCode;
+    code = error.code;
   } else {
     message = error;
   }
@@ -26,5 +28,6 @@ export const sendError = (
   return res.status(status).json({
     success: false,
     message,
+    code,
   });
 };

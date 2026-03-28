@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
 import { getItem, removeItem } from "../../../utils/localstorage";
 import { useMutation } from "../../../hooks/useMutation";
 import { logoutApi } from "../../../api/auth/logout.api";
+import Button from "../../atoms/Button";
+import { useQuery } from "../../../hooks/useQuery";
+import { getFavouriteIds } from "../../../pages/Dashboard/api";
+import { queryClient } from "../../../api/queryClient";
 
 const Navbar: React.FC = () => {
   const [user, setUser] = useState<{ name: string } | null>(null);
@@ -11,11 +15,14 @@ const Navbar: React.FC = () => {
   const { mutate, loading = false } = useMutation(logoutApi, {
     onSuccess: () => {
       removeItem("token");
+      removeItem("refreshToken");
       removeItem("user");
       setUser(null);
       navigate("/login");
     },
   });
+
+  const { data = [] } = useQuery(["favourite-ids"], getFavouriteIds, {});
 
   useEffect(() => {
     const token = getItem("token");
@@ -40,26 +47,29 @@ const Navbar: React.FC = () => {
   };
 
   const handleLogout = () => {
-    const token = getItem("token");
-    mutate(token);
+    const refreshToken = getItem("refreshToken");
+    mutate(refreshToken);
   };
 
-  const navLinks = [
-    { label: "Dashboard", path: "/" },
-    { label: "Favourites", path: "/favourites" },
-  ];
+  const navLinks = useMemo(
+    () => [
+      { label: "Dashboard", path: "/" },
+      { label: `Favourites (${data?.length || 0})`, path: "/favourites" },
+    ],
+    [data],
+  );
 
   return (
     <nav className="w-full border-b bg-white">
       <div className="max-w-7xl mx-auto px-16 sm:px-24 lg:px-32">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link to="/" className="text-2xl font-bold text-gray-900">
-            PropertyMgmt
+            <span className="logo-full">Architectural Curator</span>
+            <span className="logo-short">AC</span>
           </Link>
 
           <div className="flex items-center gap-10">
-            <div className="hidden md:flex gap-16 ml-auto mr-8">
+            <div className="flex gap-16 ml-auto mr-8">
               {navLinks.map((link) => (
                 <NavLink
                   key={link.path}
@@ -79,12 +89,12 @@ const Navbar: React.FC = () => {
                   {getInitials(user.name)}
                 </div>
 
-                <button
+                <Button
                   onClick={handleLogout}
-                  className="px-16 py-8 text-sm font-medium bg-black text-white rounded-lg hover:opacity-90 transition"
-                >
-                  {loading ? "Logging out..." : "Logout"}
-                </button>
+                  className="md:px-16 px-5 py-8 text-sm font-medium bg-black text-white rounded-lg hover:opacity-90 transition"
+                  loading={loading}
+                  text="Logout"
+                />
               </>
             ) : (
               <>

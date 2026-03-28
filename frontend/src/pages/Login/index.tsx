@@ -14,8 +14,9 @@ const Login: React.FC = () => {
   const { mutate, loading } = useMutation(loginApi, {
     onSuccess: (data) => {
       if (data.success) {
-        const { accessToken, user } = data.data;
+        const { accessToken, refreshToken, user } = data.data;
         setItem("token", accessToken);
+        setItem("refreshToken", refreshToken);
         setItem("user", JSON.stringify(user));
         toast.success("Login successful!");
         navigate(from, { replace: true });

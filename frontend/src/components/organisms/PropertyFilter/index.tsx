@@ -127,8 +127,8 @@ const PropertyFilter: React.FC<Props> = ({ onFilterChange }) => {
   ];
 
   return (
-    <div className="p-4 bg-white rounded-xl shadow-md flex gap-8 max-w-[85vw] items-center justify-center">
-      <div className="flex flex-wrap gap-12 items-center justify-between w-[90%]">
+    <div className="p-4 bg-white rounded-xl shadow-md flex gap-8 max-w-[85vw] items-center justify-center mb-16">
+      <div className="grid lg:grid-cols-6 md:grid-cols-5 grid-cols-1 gap-12 items-center justify-between w-[90%]">
         {dropDowns.map((dropDown) => (
           <Dropdown
             key={dropDown.id}
@@ -139,12 +139,12 @@ const PropertyFilter: React.FC<Props> = ({ onFilterChange }) => {
             onChange={dropDown.onChange}
           />
         ))}
+        <Button
+          onClick={handleApply}
+          className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
+          text="Apply Filters"
+        />
       </div>
-      <Button
-        onClick={handleApply}
-        className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
-        text="Apply Filters"
-      />
     </div>
   );
 };

@@ -42,10 +42,20 @@ export class AuthService {
   async login(data: LoginData) {
     const { email, password } = data;
     const user = await this.userRepository.findByEmail(email);
-    if (!user) throw new AppError("Invalid email or password", 401);
+    if (!user)
+      throw new AppError(
+        "Invalid email or password",
+        401,
+        "INVALID_CREDENTIALS",
+      );
 
     const isMatch = await comparePassword(password, user.password);
-    if (!isMatch) throw new AppError("Invalid email or password", 401);
+    if (!isMatch)
+      throw new AppError(
+        "Invalid email or password",
+        401,
+        "INVALID_CREDENTIALS",
+      );
 
     const accessToken = signAccessToken({ id: user.id, role: user.role });
     const refreshToken = signRefreshToken({ id: user.id });

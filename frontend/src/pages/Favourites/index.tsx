@@ -24,14 +24,16 @@ const Favourites = () => {
     },
   });
 
-  console.log(favourite);
-
   return (
     <div className="flex flex-col w-[100vw] min-h-[100vh] items-center sm:px-40 px-6 gap-30 pt-40">
       <h1 className="text-4xl font-bold text-gray-800 mb-20 self-start">
         My Favourites
       </h1>
-
+      {isLoading && (
+        <div className="w-full flex justify-center py-10 mt-30">
+          <div className="loader-lg" />
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 px-10 lg:max-w-[81vw] md:max-w-[90vw] w-full">
         {favourite.map((property: TProperty) => (
           <PropertyCard
@@ -40,6 +42,13 @@ const Favourites = () => {
             isFavourite={true}
             onToggleFavourite={(isFavourite, id) => {
               if (isFavourite) {
+                const updatedIds = favourite.filter(
+                  (item: TProperty) => item?.id !== id,
+                );
+                queryClient.setQueryData(
+                  JSON.stringify(["favourite-ids"]),
+                  updatedIds,
+                );
                 setFavourite((prev) =>
                   prev.filter((item: TProperty) => item?.id !== id),
                 );
@@ -56,14 +65,6 @@ const Favourites = () => {
             </p>
             <p className="text-gray-500">
               Go back to the dashboard to find properties you love!
-            </p>
-          </div>
-        )}
-
-        {isLoading && (
-          <div className="col-span-full flex justify-center py-10">
-            <p className="text-gray-500 animate-pulse text-xl">
-              Loading your favourites...
             </p>
           </div>
         )}

@@ -31,8 +31,6 @@ export function useMutation<TData, TVariables>(
     } catch (err: any) {
       const normalizedError = err?.response?.data || err;
 
-      console.log(normalizedError, "error");
-
       options?.onError?.(normalizedError);
       options?.onSettled?.(undefined, normalizedError);
 
