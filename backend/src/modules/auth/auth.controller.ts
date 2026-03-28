@@ -1,7 +1,8 @@
 import { asyncHandler } from "../../utils/asyncHandler";
-import { sendSuccess } from "../../utils/response";
+import { sendError, sendSuccess } from "../../utils/response";
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
+import { AppError } from "../../utils/AppError";
 
 const authService = new AuthService();
 

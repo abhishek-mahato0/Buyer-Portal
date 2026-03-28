@@ -38,6 +38,14 @@ export class UserRepository {
   async findRefreshToken(token: string) {
     return await prisma.refreshToken.findUnique({
       where: { token },
+      include: {
+        user: {
+          select: {
+            id: true,
+            role: true,
+          },
+        },
+      },
     });
   }
 

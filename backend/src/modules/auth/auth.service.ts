@@ -41,7 +41,6 @@ export class AuthService {
 
   async login(data: LoginData) {
     const { email, password } = data;
-
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new AppError("Invalid email or password", 401);
 

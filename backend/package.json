@@ -12,8 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^7.5.0",
+    "@prisma/client": "6.19",
     "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
     "crypto": "^1.0.1",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
@@ -21,10 +22,11 @@
     "schema-validex": "^1.0.4"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.5.0",
-    "prisma": "^7.5.0",
+    "prisma": "6.19",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
   }

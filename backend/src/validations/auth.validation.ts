@@ -1,4 +1,5 @@
 import v from "schema-validex";
+import { Infer } from "schema-validex";
 
 export const registerSchema = v.object({
   name: v.string().nonempty(),
