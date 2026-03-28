@@ -36,3 +36,14 @@ export const authMiddleware = (
     return next(new AppError("Invalid token", 401, "INVALID_TOKEN"));
   }
 };
+
+export const adminMiddleWare = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (req.user.role !== "ADMIN") {
+    return next(new AppError("Unauthorized", 401, "UNAUTHORIZED"));
+  }
+  next();
+};
