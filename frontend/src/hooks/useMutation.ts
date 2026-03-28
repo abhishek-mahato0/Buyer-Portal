@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { queryClient } from "../api/queryClient";
+
 type MutationOptions = {
   onSuccess?: (data?: any) => void;
   onError?: (error: any) => void;
@@ -5,26 +8,39 @@ type MutationOptions = {
   invalidateKeys?: string[];
 };
 
-import { queryClient } from "../api/queryClient";
-
 export function useMutation<TData, TVariables>(
   fn: (vars: TVariables) => Promise<TData>,
   options?: MutationOptions,
 ) {
+  const [loading, setLoading] = useState(false);
+
   const mutate = async (variables: TVariables) => {
     try {
+      setLoading(true);
+
       const data = await fn(variables);
+
       options?.invalidateKeys?.forEach((key) => {
         queryClient.invalidateQueries(key);
       });
+
       options?.onSuccess?.(data);
       options?.onSettled?.(data, null);
+
       return data;
-    } catch (err) {
-      options?.onError?.(err);
-      options?.onSettled?.(undefined, err);
+    } catch (err: any) {
+      const normalizedError = err?.response?.data || err;
+
+      console.log(normalizedError, "error");
+
+      options?.onError?.(normalizedError);
+      options?.onSettled?.(undefined, normalizedError);
+
+      throw normalizedError; // ✅ propagate
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { mutate };
+  return { mutate, loading };
 }

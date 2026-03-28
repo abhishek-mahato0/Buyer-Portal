@@ -1,7 +1,31 @@
 import React from "react";
 import AuthForm from "../../components/molecules/AuthForm";
+import { loginApi } from "../../api/auth/login.api";
+import { setItem } from "../../utils/localstorage";
+import { useLocation, useNavigate } from "react-router";
+import { toast } from "react-toastify";
+import { useMutation } from "../../hooks/useMutation";
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
+  const { mutate, loading } = useMutation(loginApi, {
+    onSuccess: (data) => {
+      if (data.success) {
+        const { accessToken, user } = data.data;
+        setItem("token", accessToken);
+        setItem("user", JSON.stringify(user));
+        toast.success("Login successful!");
+        navigate(from, { replace: true });
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || "Something went wrong");
+    },
+  });
+
   return (
     <div className="w-[100vw] h-[100vh] flex items-center justify-center">
       <div className="md:w-[50vw] w-[100vw] p-[30px] flex justify-center flex-col">
@@ -16,9 +40,8 @@ const Login: React.FC = () => {
           </p>
           <AuthForm
             type="login"
-            onSubmit={(data) => {
-              console.log("data", data);
-            }}
+            onSubmit={(data) => mutate(data)}
+            loading={loading}
           />
         </div>
       </div>

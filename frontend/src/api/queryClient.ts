@@ -5,6 +5,7 @@ interface QueryState<T> {
   error?: any;
   isLoading: boolean;
   subscribers: Set<() => void>;
+  updatedAt: number;
 }
 
 class QueryClient {
@@ -16,6 +17,7 @@ class QueryClient {
         data: undefined,
         error: null,
         isLoading: false,
+        updatedAt: 0,
         subscribers: new Set(),
       });
     }
@@ -26,17 +28,10 @@ class QueryClient {
   setQueryData(key: QueryKey, data: any) {
     const state = this.getQuery(key);
     state.data = data;
+    state.error = null;
     state.isLoading = false;
+    state.updatedAt = Date.now();
     this.notify(key);
-  }
-
-  invalidateQueries(key: QueryKey) {
-    this.cache.delete(key);
-  }
-  subscribe(key: QueryKey, cb: () => void) {
-    const state = this.getQuery(key);
-    state.subscribers.add(cb);
-    return () => state.subscribers.delete(cb);
   }
 
   setError(key: QueryKey, error: any) {
@@ -50,6 +45,28 @@ class QueryClient {
     const state = this.getQuery(key);
     state.isLoading = true;
     this.notify(key);
+  }
+
+  subscribe(key: QueryKey, cb: () => void) {
+    const state = this.getQuery(key);
+    state.subscribers.add(cb);
+    return () => state.subscribers.delete(cb);
+  }
+
+  invalidateQueries(key: QueryKey) {
+    const state = this.cache.get(key);
+    if (state) {
+      state.updatedAt = 0;
+      this.notify(key);
+    }
+  }
+
+  removeQuery(key: QueryKey) {
+    this.cache.delete(key);
+  }
+
+  getCache() {
+    return this.cache;
   }
 
   private notify(key: QueryKey) {

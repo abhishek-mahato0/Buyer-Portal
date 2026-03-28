@@ -11,7 +11,6 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const register = useMutation(registerApi, {
     onSuccess: (data: any) => {
-      console.log(data);
       setItem("token", data.token);
       setItem("refreshToken", data.refreshToken);
       setItem("user", JSON.stringify(data.user));
@@ -19,8 +18,7 @@ const Register: React.FC = () => {
       navigate("/");
     },
     onError: (error: any) => {
-      console.log(error);
-      toast.error(error.response.data.message || "Something went wrong");
+      toast.error(error?.message || "Something went wrong");
     },
   });
   return (

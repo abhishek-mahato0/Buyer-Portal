@@ -8,9 +8,10 @@ import type { LoginData, RegisterData } from "../../../types/auth.types";
 interface AuthFormProps {
   type: "login" | "register";
   onSubmit: (data: LoginData | RegisterData) => void;
+  loading?: boolean;
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
+const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit, loading }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -118,6 +119,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
         <Button
           text={type === "login" ? "Enter Portal" : "Create Account"}
           type="submit"
+          loading={loading}
         />
       </div>
 

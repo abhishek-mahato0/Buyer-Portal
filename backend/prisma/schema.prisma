@@ -26,6 +26,8 @@ model Property {
   description String
   price       Float
   location    String
+  country     String
+  rooms       Int
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   favourites  Favourite[]

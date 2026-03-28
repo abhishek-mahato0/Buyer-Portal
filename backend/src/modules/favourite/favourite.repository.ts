@@ -1,43 +1,59 @@
 import { prisma } from "../../lib/prisma";
 
 export class FavouriteRepository {
-  async create(userId: string, propertyId: string) {
-    return await prisma.favourite.create({
+  async toggleFavourite(userId: string, propertyId: string) {
+    const existing = await prisma.favourite.findUnique({
+      where: {
+        userId_propertyId: {
+          userId,
+          propertyId,
+        },
+      },
+    });
+
+    if (existing) {
+      await prisma.favourite.delete({
+        where: { id: existing.id },
+      });
+      return { action: "removed", propertyId };
+    }
+
+    await prisma.favourite.create({
       data: {
         userId,
         propertyId,
       },
     });
+    return { action: "added", propertyId };
   }
 
-  async delete(userId: string, propertyId: string) {
-    return await prisma.favourite.delete({
-      where: {
-        userId_propertyId: { userId, propertyId },
-      },
-    });
-  }
-
-  async findByUserId(userId: string, page: number, limit: number) {
+  async findAll(userId: string) {
     return await prisma.favourite.findMany({
       where: { userId },
-      skip: (page - 1) * limit,
-      take: limit,
+      include: {
+        property: true,
+      },
+      orderBy: { createdAt: "desc" },
     });
   }
 
-  async findByPropertyId(propertyId: string) {
-    return await prisma.favourite.findMany({
-      where: { propertyId },
-      include: {
-        user: true,
+  async findAllIds(userId: string) {
+    const favourites = await prisma.favourite.findMany({
+      where: { userId },
+      select: { propertyId: true },
+    });
+    return favourites.map((f) => f.propertyId);
+  }
+
+  async isFavourited(userId: string, propertyId: string) {
+    const favourite = await prisma.favourite.findUnique({
+      where: {
+        userId_propertyId: {
+          userId,
+          propertyId,
+        },
       },
     });
-  }
-
-  async findByUserIdAndPropertyId(userId: string, propertyId: string) {
-    return await prisma.favourite.findUnique({
-      where: { userId_propertyId: { userId, propertyId } },
-    });
+    return !!favourite;
   }
 }

@@ -1,22 +1,30 @@
 import React from "react";
+import BannerImg from "../../../assets/images/property1.png";
 
 const Banner: React.FC = () => {
   return (
-    <div className="hidden md:flex relative overflow-hidden h-[100vh] bg-black">
-      <img
-        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMF-j6iea_-bmxqE4C7BrPHPYdKtTUncdBrsVieTaAhOlCrai37cyyFf5WryCQZOjZKxMHPJr8tff9Yv4Aeoya16tvlNMUDX9UmVx9E947drTJ7CJBwXp1WMYSc2CFFou2lJLAGnybCkDxmQxlALahXddAzkzKz0YRjWAcUDy-HA1a_YHyKLiJBOIJ0VsnEC2hdrnok7VVNTJTL5dZ--kXattsSdo_B6E3U8gT6h2iQ-FWkgfd0bof7RDuOD92qEJABCNwYvRPWkpS"
-        alt="Modern Architecture"
-        className="w-[100%] h-[100%] object-cover z-1 absolute top-0 bottom-0"
-      />
-      <div className="absolute bottom-0 left-0 w-full h-[50%] z-2">
-        <div>
-          <p>FEATURED ESTATE</p>
-        </div>
-        <h1>The Glass Pavilion.</h1>
-        <p>
-          Experience the pinnacle of modernist living. Our curated portal
-          connects visionary buyers with global architectural landmarks.
+    <div className="px-40 h-full min-w-[80vw] flex gap-16 items-center justify-between">
+      <div className="flex flex-col gap-8 items-start w-full">
+        <h1 className="flex flex-col sm:size-[40px] size-[60px]">
+          The Global <span className="text-green">Marketplace</span>
+        </h1>
+        <p className="sm:size-[16px] size-[24px] flex flex-col">
+          <span>
+            Discover an elite selection of off-market estates and
+            architecturally significant residences
+          </span>
+          <span>curated for the discerning collector.</span>
         </p>
+        <div className="text-green p-4 sm:size[14px] size-[16px]">
+          Trusted by leading institutions and investors worldwide.
+        </div>
+      </div>
+      <div className="w-full h-[100%]">
+        <img
+          src={BannerImg}
+          alt="bannerImg"
+          className="w-[100%] h-[100%] object-cover rounded-full"
+        />
       </div>
     </div>
   );

@@ -6,22 +6,15 @@ export class FavouriteService {
   ) {}
 
   async toggleFavourite(userId: string, propertyId: string) {
-    const existingFavourite =
-      await this.favouriteRepository.findByUserIdAndPropertyId(
-        userId,
-        propertyId,
-      );
-
-    if (existingFavourite) {
-      await this.favouriteRepository.delete(userId, propertyId);
-      return { message: "Favourite removed" };
-    }
-
-    await this.favouriteRepository.create(userId, propertyId);
-    return { message: "Favourite added" };
+    return await this.favouriteRepository.toggleFavourite(userId, propertyId);
   }
 
-  async getFavourites(userId: string, page: number, limit: number) {
-    return await this.favouriteRepository.findByUserId(userId, page, limit);
+  async getFavourites(userId: string) {
+    const favourites = await this.favouriteRepository.findAll(userId);
+    return favourites.map((f) => f.property);
+  }
+
+  async getFavouriteIds(userId: string) {
+    return await this.favouriteRepository.findAllIds(userId);
   }
 }

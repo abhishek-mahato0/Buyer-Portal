@@ -14,13 +14,18 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
-
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      removeItem("token");
-      window.location.href = "/login";
+      const isAuthRoute =
+        window.location.pathname.includes("/login") ||
+        window.location.pathname.includes("/register");
+
+      if (!isAuthRoute) {
+        removeItem("token");
+        window.location.href = "/login";
+      }
     }
 
     return Promise.reject(error);
