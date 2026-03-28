@@ -5,6 +5,7 @@ import { getFavourites, toggleFavourite } from "../Dashboard/api";
 import type { TProperty } from "../Dashboard/types";
 import { queryClient } from "../../api/queryClient";
 import { useState } from "react";
+import { Link } from "react-router";
 
 const Favourites = () => {
   const [favourite, setFavourite] = useState([]);
@@ -57,18 +58,23 @@ const Favourites = () => {
             }}
           />
         ))}
-
-        {!isLoading && properties.length === 0 && (
-          <div className="col-span-full flex flex-col items-center justify-center py-20 gap-4">
-            <p className="text-2xl text-gray-400">
-              Your favourites list is empty
-            </p>
-            <p className="text-gray-500">
-              Go back to the dashboard to find properties you love!
-            </p>
-          </div>
-        )}
       </div>
+      {!isLoading && properties.length === 0 && (
+        <div className="w-full flex flex-col items-center justify-center py-10 gap-4">
+          <p className="text-2xl text-gray-400">
+            Your favourites list is empty
+          </p>
+          <p className="text-gray-500">
+            Go back to the dashboard to find properties you love!
+          </p>
+          <Link
+            to="/"
+            className="text-primary font-semibold hover:text-secondary underline underline-offset-4 decoration-outline-variant hover:decoration-secondary transition-all"
+          >
+            Back to Dashboard
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

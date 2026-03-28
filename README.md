@@ -80,16 +80,26 @@ cd property-management
 
 The project follows a modular and scalable architecture:
 
-- **Backend**: Controller-Service-Repository pattern.
-- **Frontend**: Atomic Design (Atoms, Molecules, Organisms) for components, and page-based routing.
+- **Backend**: Controller-Service-Repository pattern for clear separation of concerns.
+- **Frontend**: Atomic Design (Atoms, Molecules, Organisms) for highly reusable UI components.
 
-## 🔐 Authentication Flow
+## ⚡ Caching & State Management (Custom `useQuery`)
 
-The system uses a state-of-the-art authentication mechanism:
+To avoid heavy dependencies like TanStack Query, this project features a custom-built lightweight state management and caching system:
 
-1. **Login/Register**: Returns a short-lived Access Token and a long-lived Refresh Token.
-2. **Access Token**: Sent in the `Authorization: Bearer` header for every request.
-3. **Refresh Token**: Used to automatically issue a new Access Token via an Axios interceptor when the original expires (401 error), ensuring a continuous user session without re-login.
+- **`useQuery` Hook**: A powerful custom hook that handles data fetching, loading states, error handling, and component synchronization.
+- **`queryClient`**: A centralized cache that stores query results. It uses a subscriber pattern (Observable) to notify all components using the same data whenever a query is invalidated or updated.
+- **Stale-While-Revalidate**: Supports `staleTime` and `cacheTime` to optimize network requests and provide a snappy UI experience.
+- **Optimistic Updates**: Favoriting properties uses optimistic updates to instantly reflect changes in the UI before the server responds.
+
+## 🔐 Authentication Flow (Multi-Token Strategy)
+
+The system implements a secure, professional-grade authentication mechanism:
+
+1. **Short-lived Access Token**: Valid for **15 minutes**. Sent in the `Authorization: Bearer` header for every request to minimize the window for token misuse.
+2. **Long-lived Refresh Token**: Valid for **7 days**. Stored securely and used to obtain new access tokens.
+3. **Token Rotation**: Every time a refresh token is used, a new pair (Access + Refresh) is generated, invalidating the old refresh token to prevent replay attacks.
+4. **Axios Interceptor**: A smart frontend interceptor that automatically catches `401 TOKEN_EXPIRED` errors, requests a new access token, and retries the original failed request seamlessly without the user noticing.
 
 ## 📄 License
 

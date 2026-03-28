@@ -131,6 +131,18 @@ a {
   display: none;
 }
 
+.sticky {
+  position: sticky;
+}
+
+.top-0 {
+  top: 0;
+}
+
+.z-100 {
+  z-index: 100;
+}
+
 /* Footer styles */
 .footer {
   background: #f9f9f9;

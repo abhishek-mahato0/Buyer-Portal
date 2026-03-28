@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router";
+import { Link, NavLink, useLocation, useNavigate } from "react-router";
 import { getItem, removeItem } from "../../../utils/localstorage";
 import { useMutation } from "../../../hooks/useMutation";
 import { logoutApi } from "../../../api/auth/logout.api";
 import Button from "../../atoms/Button";
 import { useQuery } from "../../../hooks/useQuery";
 import { getFavouriteIds } from "../../../pages/Dashboard/api";
-import { queryClient } from "../../../api/queryClient";
 
 const Navbar: React.FC = () => {
   const [user, setUser] = useState<{ name: string } | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { mutate, loading = false } = useMutation(logoutApi, {
     onSuccess: () => {
@@ -53,14 +53,22 @@ const Navbar: React.FC = () => {
 
   const navLinks = useMemo(
     () => [
-      { label: "Dashboard", path: "/" },
-      { label: `Favourites (${data?.length || 0})`, path: "/favourites" },
+      {
+        label: "Dashboard",
+        path: "/",
+        isActive: location.pathname === "/",
+      },
+      {
+        label: `Favourites (${data?.length || 0})`,
+        path: "/favourites",
+        isActive: location.pathname === "/favourites",
+      },
     ],
-    [data],
+    [data, location.pathname],
   );
 
   return (
-    <nav className="w-full border-b bg-white">
+    <nav className="w-full border-b bg-white sticky top-0 z-100">
       <div className="max-w-7xl mx-auto px-16 sm:px-24 lg:px-32">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="text-2xl font-bold text-gray-900">
@@ -74,7 +82,7 @@ const Navbar: React.FC = () => {
                 <NavLink
                   key={link.path}
                   to={link.path}
-                  className="text-sm font-medium text-gray-600 hover:text-black transition"
+                  className={`text-sm font-medium text-gray-600 hover:text-black transition ${link.isActive ? "text-black font-bold" : ""}`}
                 >
                   {link.label}
                 </NavLink>

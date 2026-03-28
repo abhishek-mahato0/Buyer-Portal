@@ -4,6 +4,8 @@ import Button from "../../atoms/Button";
 import { Link } from "react-router";
 import { loginSchema, registerSchema } from "../../../schemas/auth.schema";
 import type { LoginData, RegisterData } from "../../../types/auth.types";
+import { EyeIcon } from "../../../assets/icons/EyeIcon";
+import { EyeOffIcon } from "../../../assets/icons/EyeOffIcon";
 
 interface AuthFormProps {
   type: "login" | "register";
@@ -12,6 +14,9 @@ interface AuthFormProps {
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit, loading }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -97,20 +102,38 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit, loading }) => {
           id="password"
           label="Password"
           placeholder="••••••••"
-          type="password"
+          type={showPassword ? "text" : "password"}
           onChange={handleChange}
           value={formData.password}
           error={error.password}
+          suffix={
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="p-2 text-[#9E9E9E] hover:text-black transition border-0"
+            >
+              {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+            </button>
+          }
         />
         {type === "register" && (
           <Input
             id="confirmPassword"
             label="Confirm Password"
             placeholder="••••••••"
-            type="password"
+            type={showConfirmPassword ? "text" : "password"}
             onChange={handleChange}
             value={formData.confirmPassword}
             error={error.confirmPassword}
+            suffix={
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="p-2 text-[#9E9E9E] hover:text-black transition border-0"
+              >
+                {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
+              </button>
+            }
           />
         )}
       </div>

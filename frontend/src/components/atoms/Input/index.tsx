@@ -8,6 +8,7 @@ interface InputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
   error?: string;
+  suffix?: React.ReactNode;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -18,6 +19,7 @@ const Input: React.FC<InputProps> = ({
   onChange,
   value,
   error,
+  suffix,
 }) => {
   return (
     <div className="flex flex-col gap-3 mb-24">
@@ -27,17 +29,20 @@ const Input: React.FC<InputProps> = ({
       >
         {label}
       </label>
-      <input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        onChange={onChange}
-        value={value}
-        className={
-          "w-full size-[16px] md:size-[18px] pl-2 pt-6 pb-4 " +
-          (error ? "error" : "")
-        }
-      />
+      <div className="relative flex items-center">
+        <input
+          id={id}
+          type={type}
+          placeholder={placeholder}
+          onChange={onChange}
+          value={value}
+          className={
+            "w-full size-[16px] md:size-[18px] pl-2 pt-6 pb-4 pr-10 " +
+            (error ? "error" : "")
+          }
+        />
+        {suffix && <div className="absolute right-0 bottom-4">{suffix}</div>}
+      </div>
       {error && <p className="text-red size-[12px]">{error}</p>}
     </div>
   );
